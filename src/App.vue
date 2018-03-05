@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <textarea name="name" rows="8" cols="80" v-model="joke"></textarea>
+    <textarea ref="texta" name="name" rows="8" cols="80"></textarea>
     <br>
     <button class="button" type="button" name="button" @click="getRandomJoke()">New</button>
   </div>
@@ -19,6 +19,11 @@ export default {
   created () {
     this.getRandomJoke()
   },
+  watch: {
+    joke () {
+      this.joke = this.decode(this.joke)
+    }
+  },
   methods: {
     getRandomJoke () {
       this.$http.get(this.source + '/random').then((response) => {
@@ -27,6 +32,11 @@ export default {
           this.joke = data.value.joke
         }
       })
+    },
+    decode (html) {
+      var txt = this.$refs.texta
+      txt.innerHTML = html
+      return txt.value
     }
   }
 }
